@@ -8,7 +8,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.http import response
 from django.urls import NoReverseMatch, resolve, Resolver404, reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from object_tool import CustomObjectToolAdminSiteMixin
 from six.moves.urllib.parse import urlparse
 

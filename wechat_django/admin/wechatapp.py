@@ -6,7 +6,7 @@ from django import forms
 from django.contrib import admin
 from django.template.defaultfilters import truncatechars
 from django.utils.html import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ..models import MsgLogFlag, WeChatApp
 from ..models.permission import get_user_permissions
