@@ -5,14 +5,14 @@ import re
 
 from django.db import models as m, transaction
 from django.utils import timezone as tz
-from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext_lazy as _
 from wechatpy.constants import WeChatErrorCode
 from wechatpy.exceptions import WeChatClientException
 
-from ..utils.model import enum2choices, model_fields
-from ..utils.func import next_chunk
 from . import appmethod, WeChatApp, WeChatModel
+from ..utils.func import next_chunk
+from ..utils.model import enum2choices, model_fields
 
 
 class WeChatUserManager(m.Manager):
@@ -63,7 +63,7 @@ class WeChatUser(WeChatModel):
     country = m.CharField(_("country"), max_length=24, null=True)
     language = m.CharField(_("language"), max_length=24, null=True)
 
-    subscribe = m.NullBooleanField(_("is subscribed"), null=True)
+    subscribe = m.BooleanField(_("is subscribed"), null=True)
     subscribe_time = m.IntegerField(_("subscribe time"), null=True)
     subscribe_scene = m.CharField(
         _("subscribe scene"), max_length=32, null=True,
@@ -121,12 +121,12 @@ class WeChatUser(WeChatModel):
                 try:
                     return app.fetch_user(openid)
                 except Exception as e:
-                    if isinstance(e, WeChatClientException)\
-                        and e.errcode == WeChatErrorCode.INVALID_OPENID:
+                    if isinstance(e, WeChatClientException) \
+                            and e.errcode == WeChatErrorCode.INVALID_OPENID:
                         # 不存在抛异常
                         raise
                     elif ignore_errors:
-                        pass # TODO: 好歹记个日志吧...
+                        pass  # TODO: 好歹记个日志吧...
                     else:
                         raise
             elif not ignore_errors:

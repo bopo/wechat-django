@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 from django.db import models as m, transaction
 from django.utils.translation import ugettext_lazy as _
 
-from ..utils.model import model_fields
 from . import appmethod, Material, WeChatModel
+from ..utils.model import model_fields
 
 
 class Article(WeChatModel):
@@ -24,10 +24,8 @@ class Article(WeChatModel):
     content_source_url = m.CharField(
         _("content source url"), max_length=256)
 
-    need_open_comment = m.NullBooleanField(
-        _("need open comment"), default=None)
-    only_fans_can_comment = m.NullBooleanField(
-        _("only fans can comment"), default=None)
+    need_open_comment = m.BooleanField(_("need open comment"), default=None, null=True)
+    only_fans_can_comment = m.BooleanField(_("only fans can comment"), default=None, null=True)
 
     index = m.PositiveSmallIntegerField(_("index"))
     _thumb_url = m.CharField(
