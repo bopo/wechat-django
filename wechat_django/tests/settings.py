@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 import os
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ALLOWED_HOSTS = ["example.com"]
@@ -12,7 +11,6 @@ ALLOWED_HOSTS = ["example.com"]
 DEBUG = True
 
 SECRET_KEY = "fake-key"
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,7 +22,6 @@ INSTALLED_APPS = [
     "wechat_django",
     # "wechat_django.pay"
 ]
-
 
 TEMPLATES = [
     {
@@ -42,7 +39,6 @@ TEMPLATES = [
     },
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -50,7 +46,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
-
 
 DATABASES = {
     "default": {
@@ -68,3 +63,5 @@ STATIC_URL = '/static/'
 ROOT_URLCONF = "wechat_django.tests.urls"
 
 logging.disable(logging.CRITICAL)
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
