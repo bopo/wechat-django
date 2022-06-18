@@ -2,6 +2,7 @@
 # flake8: noqa
 from __future__ import unicode_literals
 
-from . import (
-    article, material, menu, messagehandler, messagelog, template, user,
-    usertag)
+try:
+    from . import (article, material, menu, messagehandler, messagelog, template, user, usertag)
+except ImportError:
+    pass

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from . import views, wechatapp # noqa
+try:
+    from . import views, wechatapp  # noqa
+except ImportError:
+    pass
