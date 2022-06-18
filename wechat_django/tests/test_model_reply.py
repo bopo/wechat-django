@@ -12,13 +12,12 @@ from six.moves.urllib.parse import parse_qsl
 from wechatpy import messages, parse_message, replies
 from wechatpy.utils import check_signature, WeChatSigner
 
+from .base import mock, WeChatTestCase
+from .interceptors import (common_interceptor, wechatapi,
+                           wechatapi_accesstoken, wechatapi_error)
 from ..exceptions import MessageHandleError
 from ..handler import Handler, WeChatMessageInfo
 from ..models import MessageHandler, Reply
-
-from .base import mock, WeChatTestCase
-from .interceptors import (common_interceptor, wechatapi,
-    wechatapi_accesstoken, wechatapi_error)
 
 
 class ReplyTestCase(WeChatTestCase):
@@ -134,6 +133,7 @@ class ReplyTestCase(WeChatTestCase):
             data = json.loads(request.body.decode())
             self.assertEqual(data["text"]["content"], reply1)
             self.assertEqual(data["touser"], sender)
+
         with wechatapi_accesstoken(), wechatapi(api, dict(errcode=0, errmsg=""), callback):
             reply = handler_all.reply(message)
             self.assertEqual(reply.type, Reply.MsgType.TEXT)
@@ -171,7 +171,7 @@ class ReplyTestCase(WeChatTestCase):
         # 测试不属于本app的自定义回复
         handler_success = _get_handler("app_only_handler")
         handler_fail = _get_handler("app_only_handler",
-            WeChatApp.objects.get_by_name("test1"))
+                                    WeChatApp.objects.get_by_name("test1"))
         reply = handler_success.reply(message)
         self.assertIsInstance(reply, replies.TextReply)
         self.assertEqual(reply.content, success_reply)
@@ -303,7 +303,7 @@ class ReplyTestCase(WeChatTestCase):
         description = "desc"
         msg_type = Reply.MsgType.VIDEO
         reply = Reply(type=msg_type, media_id=media_id, title=title,
-            description=description).reply(message)
+                      description=description).reply(message)
         funcname, kwargs = Reply.reply2send(reply)
         self.assertTrue(hasattr(client, funcname))
         self.assertEqual(funcname, "send_video")
@@ -324,8 +324,8 @@ class ReplyTestCase(WeChatTestCase):
         hq_music_url = "hq_music_url"
         msg_type = Reply.MsgType.MUSIC
         reply = Reply(type=msg_type, thumb_media_id=media_id, title=title,
-            description=description, music_url=music_url,
-            hq_music_url=hq_music_url).reply(message)
+                      description=description, music_url=music_url,
+                      hq_music_url=hq_music_url).reply(message)
         funcname, kwargs = Reply.reply2send(reply)
         self.assertTrue(hasattr(client, funcname))
         self.assertEqual(funcname, "send_music")
@@ -361,7 +361,7 @@ class ReplyTestCase(WeChatTestCase):
             self.assertEqual(data["text"]["content"], content)
 
         with wechatapi_accesstoken(), wechatapi("/cgi-bin/message/custom/send", dict(
-            errcode=0
+                errcode=0
         ), callback):
             handler.replies.all()[0].send(message)
 

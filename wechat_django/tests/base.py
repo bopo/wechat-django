@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import json
 import os
+
 try:
     from unittest import mock
 except ImportError:
@@ -44,21 +45,21 @@ class WeChatTestCase(WeChatTestCaseBase):
     def setUpTestData(cls):
         super(WeChatTestCase, cls).setUpTestData()
         WeChatApp.objects.create(title="test", name="test",
-            appid="appid", appsecret="secret", token="token")
+                                 appid="appid", appsecret="secret", token="token")
         WeChatApp.objects.create(title="test1", name="test1",
-            appid="appid1", appsecret="secret", token="token")
+                                 appid="appid1", appsecret="secret", token="token")
         WeChatApp.objects.create(title="miniprogram", name="miniprogram",
-            appid="miniprogram", appsecret="secret",
-            type=WeChatApp.Type.MINIPROGRAM)
+                                 appid="miniprogram", appsecret="secret",
+                                 type=WeChatApp.Type.MINIPROGRAM)
 
     def setUp(self):
         self.app = WeChatApp.objects.get_by_name("test")
         self.another_app = WeChatApp.objects.get_by_name("test1")
         self.miniprogram = WeChatApp.objects.get_by_name("miniprogram")
 
-    #region utils
+    # region utils
     def _create_handler(self, rules=None, name="", replies=None, app=None,
-        **kwargs):
+                        **kwargs):
         """:rtype: MessageHandler"""
         from ..models import MessageHandler, Reply, Rule
 
@@ -99,4 +100,4 @@ class WeChatTestCase(WeChatTestCaseBase):
                 for k, v in kwargs.items()
             }
         )
-    #endregion
+    # endregion

@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from wechatpy.client.api import WeChatMenu
 
-from ..models import Material, Menu, WeChatApp
 from .base import mock, WeChatTestCase
+from ..models import Menu, WeChatApp
 
 
 class MenuTestCase(WeChatTestCase):
@@ -17,10 +17,9 @@ class MenuTestCase(WeChatTestCase):
         # 微信官方菜单
         data = self.load_data("mp_menu_data")
         buttons = data["selfmenu_info"]["button"]
-        with mock.patch.object(WeChatApp, "as_permenant_material"),\
-            mock.patch.object(WeChatApp, "sync_articles"),\
-            mock.patch.object(WeChatMenu, "get_menu_info"):
-
+        with mock.patch.object(WeChatApp, "as_permenant_material"), \
+                mock.patch.object(WeChatApp, "sync_articles"), \
+                mock.patch.object(WeChatMenu, "get_menu_info"):
             WeChatApp.as_permenant_material.return_value = permenant_media
             WeChatApp.sync_articles.return_value = None
             WeChatMenu.get_menu_info.return_value = data
@@ -76,5 +75,5 @@ class MenuTestCase(WeChatTestCase):
     @property
     def menus(self):
         return (self.app.menus.filter(menuid__isnull=True)
-            .filter(parent_id__isnull=True)
-            .all())
+                .filter(parent_id__isnull=True)
+                .all())

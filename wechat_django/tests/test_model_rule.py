@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 from wechatpy import events, messages
 
+from .base import WeChatTestCase
 from ..handler import message_rule
 from ..models import MessageHandler, Rule, WeChatApp
-from .base import WeChatTestCase
 
 
 def undecorated_rule(message_info):
@@ -29,6 +29,7 @@ def app_only_handler(message_info):
 class HandlerTestCase(WeChatTestCase):
     def test_match(self):
         """测试匹配"""
+
         def _create_msg(type, **kwargs):
             rv = type(dict())
             for k, v in kwargs.items():
@@ -39,7 +40,7 @@ class HandlerTestCase(WeChatTestCase):
         text_message = _create_msg(messages.TextMessage, content=content)
         another_content = "abc"
         another_text_message = _create_msg(messages.TextMessage,
-            content=another_content)
+                                           content=another_content)
 
         media_id = "media_id"
         url = "http://example.com/foo?bar=1"
@@ -58,21 +59,21 @@ class HandlerTestCase(WeChatTestCase):
 
         # 测试类型匹配
         rule = Rule(type=
-            Rule.Type.MSGTYPE, msg_type=Rule.ReceiveMsgType.IMAGE)
+                    Rule.Type.MSGTYPE, msg_type=Rule.ReceiveMsgType.IMAGE)
         self.assertNotMatch(rule, text_message)
         self.assertMatch(rule, image_message)
 
         # 测试事件匹配
         rule = Rule(type=
-            Rule.Type.EVENT, event=MessageHandler.EventType.SUBSCRIBE)
+                    Rule.Type.EVENT, event=MessageHandler.EventType.SUBSCRIBE)
         self.assertNotMatch(rule, text_message)
         self.assertMatch(rule, sub_event)
         self.assertNotMatch(rule, click_event)
 
         # 测试指定事件匹配
         rule = Rule(type=
-            Rule.Type.EVENTKEY, event=MessageHandler.EventType.CLICK,
-            key=event_key)
+                    Rule.Type.EVENTKEY, event=MessageHandler.EventType.CLICK,
+                    key=event_key)
         self.assertNotMatch(rule, text_message)
         self.assertNotMatch(rule, sub_event)
         self.assertMatch(rule, click_event)

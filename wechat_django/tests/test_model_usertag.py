@@ -4,17 +4,18 @@ from __future__ import unicode_literals
 from django.db import transaction
 from wechatpy.client.api import WeChatGroup, WeChatTag
 
-from ..models import UserTag, WeChatUser
 from .base import mock, WeChatTestCase
+from ..models import UserTag, WeChatUser
 
 
 class UserTestCase(WeChatTestCase):
     def test_sync(self):
         """测试同步用户标签"""
+
         def assertTagSyncSuccess(custom_tags):
-            with mock.patch.object(WeChatGroup, "get"),\
-                mock.patch.object(WeChatTag, "update"),\
-                mock.patch.object(WeChatTag, "create"):
+            with mock.patch.object(WeChatGroup, "get"), \
+                    mock.patch.object(WeChatTag, "update"), \
+                    mock.patch.object(WeChatTag, "create"):
                 remote_tags = self.base_tags[:] + [
                     dict(
                         id=id,
@@ -41,9 +42,8 @@ class UserTestCase(WeChatTestCase):
 
     def test_sync_users(self):
         """测试同步标签下的用户"""
-        with mock.patch.object(WeChatTag, "iter_tag_users"),\
-            mock.patch.object(WeChatUser, "upsert_users"):
-
+        with mock.patch.object(WeChatTag, "iter_tag_users"), \
+                mock.patch.object(WeChatUser, "upsert_users"):
             WeChatTag.iter_tag_users.return_value = ["openid1", "openid2"]
             WeChatUser.upsert_users.return_value = ["openid1", "openid2"]
             tag = UserTag.objects.create(
@@ -64,9 +64,8 @@ class UserTestCase(WeChatTestCase):
             app=self.app, id=102, name="tag2", _tag_local=True)
         del tag2._tag_local
 
-        with mock.patch.object(WeChatTag, "tag_user"),\
-            mock.patch.object(WeChatTag, "untag_user"):
-
+        with mock.patch.object(WeChatTag, "tag_user"), \
+                mock.patch.object(WeChatTag, "untag_user"):
             # 测试用户添加标签
             WeChatTag.untag_user.side_effect = Exception(untag_user_err)
             user.tags.set((tag1,))
@@ -81,7 +80,7 @@ class UserTestCase(WeChatTestCase):
             # 测试用户加减标签
             WeChatTag.untag_user.side_effect = None
             WeChatTag.tag_user.side_effect = Exception(tag_user_err)
-            user.tags.set((tag2, ))
+            user.tags.set((tag2,))
             self.assertEqual(user.tags.count(), 1)
             self.assertEqual(
                 WeChatTag.untag_user.call_args, ((tag1.id, user.openid),))
@@ -112,9 +111,8 @@ class UserTestCase(WeChatTestCase):
             app=self.app, id=101, name="tag1", _tag_local=True)
         del tag._tag_local
 
-        with mock.patch.object(WeChatTag, "tag_user"),\
-            mock.patch.object(WeChatTag, "untag_user"):
-
+        with mock.patch.object(WeChatTag, "tag_user"), \
+                mock.patch.object(WeChatTag, "untag_user"):
             # 测试标签添加用户
             WeChatTag.untag_user.side_effect = Exception(untag_user_err)
             tag.users.set((user1,))
@@ -129,7 +127,7 @@ class UserTestCase(WeChatTestCase):
             # 测试标签加减用户
             WeChatTag.untag_user.side_effect = None
             WeChatTag.tag_user.side_effect = Exception(tag_user_err)
-            tag.users.set((user2, ))
+            tag.users.set((user2,))
             self.assertEqual(tag.users.count(), 1)
             self.assertEqual(
                 WeChatTag.untag_user.call_args, ((tag.id, [user1.openid]),))

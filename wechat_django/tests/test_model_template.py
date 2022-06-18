@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from wechatpy.client.api import WeChatMessage, WeChatTemplate, WeChatWxa
 
-from ..models import Template, WeChatUser
 from .base import mock, WeChatTestCase
+from ..models import Template, WeChatUser
 
 
 class TemplateTestCase(WeChatTestCase):
@@ -59,7 +59,7 @@ class TemplateTestCase(WeChatTestCase):
                 },
                 "keyword3": {
                     "value": "粤海喜来登酒店"
-                } ,
+                },
                 "keyword4": {
                     "value": "广州市天河区天河路208号"
                 }
@@ -101,26 +101,26 @@ class TemplateTestCase(WeChatTestCase):
             url = "url"
             data = {
                 "first": {
-                    "value":"恭喜你购买成功！",
-                    "color":"#173177"
+                    "value": "恭喜你购买成功！",
+                    "color": "#173177"
                 },
-                "keyword1":{
-                    "value":"巧克力",
-                    "color":"#173177"
+                "keyword1": {
+                    "value": "巧克力",
+                    "color": "#173177"
                 },
                 "keyword2": {
-                    "value":"39.8元",
-                    "color":"#173177"
+                    "value": "39.8元",
+                    "color": "#173177"
                 },
                 "keyword3": {
-                    "value":"2014年9月22日",
-                    "color":"#173177"
+                    "value": "2014年9月22日",
+                    "color": "#173177"
                 },
-                "remark":{
-                    "value":"欢迎再次购买！",
-                    "color":"#173177"
+                "remark": {
+                    "value": "欢迎再次购买！",
+                    "color": "#173177"
                 }
-           }
+            }
 
             t = Template(app=self.app, template_id=id)
 

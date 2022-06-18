@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import ContentType, Permission
 
-from ..models import permission as p, WeChatApp
 from .base import WeChatTestCase
+from ..models import permission as p, WeChatApp
 
 
 class PermissionTestCase(WeChatTestCase):

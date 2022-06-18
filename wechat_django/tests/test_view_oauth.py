@@ -3,19 +3,19 @@ from __future__ import unicode_literals
 
 import json
 
+import six
 from django.conf.urls import url
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import response
 from django.test import RequestFactory
 from django.test.utils import override_settings
-import six
 from six.moves.urllib.parse import parse_qsl, urlparse
 
-from ..models import WeChatUser
-from ..oauth import (WeChatAuthenticated, wechat_auth, WeChatSNSScope,
-                     WeChatOAuthClient, WeChatOAuthView)
 from .base import mock, WeChatTestCase
 from .interceptors import common_interceptor
+from ..models import WeChatUser
+from ..oauth import (wechat_auth, WeChatSNSScope,
+                     WeChatOAuthClient, WeChatOAuthView)
 
 
 def oauth_api(openid, callback=None):
@@ -71,6 +71,7 @@ def test_oauth_view(request, *args):
         args=args
     )
 
+
 urlpatterns = [
     url(r"^test/(.+)$", test_oauth_view)
 ]
@@ -121,8 +122,8 @@ class OAuthTestCase(WeChatTestCase):
         # 测试ajax请求redirect_uri
         view_cls = WeChatOAuthView(appname=self.app.name)
         request = rf.post(api, dict(a=1),
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-            HTTP_REFERRER=absolute_uri(redirect_uri))
+                          HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+                          HTTP_REFERRER=absolute_uri(redirect_uri))
         SessionMiddleware().process_request(request)
         view_cls.setup(request)
         request = view_cls.initialize_request(request)
@@ -289,7 +290,7 @@ class OAuthTestCase(WeChatTestCase):
         self.assertEqual(wrapped_view(request_get), resp)
         self.assertIsInstance(wrapped_view(request_post),
                               response.HttpResponseNotAllowed)
-        
+
         # 测试仅post
         wrapped_view = wechat_auth(self.app.name, methods=["POST"])(view)
         self.assertIsInstance(wrapped_view(request_get),
@@ -317,7 +318,7 @@ class OAuthTestCase(WeChatTestCase):
 
         with oauth_api(openid):
             resp = self.client.get(path + "?code=123", follow=True,
-                HTTP_HOST=host)
+                                   HTTP_HOST=host)
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content.decode())
         self.assertEqual(data["openid"], openid)

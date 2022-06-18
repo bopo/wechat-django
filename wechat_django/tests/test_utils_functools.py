@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 import threading
 from uuid import uuid4
 
-from ..utils.func import next_chunk, Static
 from .base import WeChatTestCase
+from ..utils.func import next_chunk, Static
 
 
 class UtilFunctoolTestCase(WeChatTestCase):
@@ -22,7 +22,7 @@ class UtilFunctoolTestCase(WeChatTestCase):
         data = list(next_chunk(range(101), 100))
         self.assertEqual(len(data), 2)
         self.assertEqual(set(range(100)), set(data[0]))
-        self.assertEqual(set((100, )), set(data[1]))
+        self.assertEqual(set((100,)), set(data[1]))
 
     def test_static(self):
         """测试static"""

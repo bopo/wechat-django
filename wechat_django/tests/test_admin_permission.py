@@ -4,13 +4,10 @@ from __future__ import unicode_literals
 from uuid import uuid4 as uuid
 
 from django.contrib.admin import site
-from django.contrib.auth.models import ContentType, Permission, User
-from django.urls import ResolverMatch
+from django.contrib.auth.models import User
 
-from ..models import permission as pm, WeChatApp
-from ..pay.admin.payapp import WeChatPayInline, WeChatAppWithPayAdmin
-from ..pay.models.app import WeChatPay
 from .base import WeChatTestCase
+from ..models import permission as pm
 
 
 class PermissionTestCase(WeChatTestCase):
@@ -31,6 +28,7 @@ class PermissionTestCase(WeChatTestCase):
 
     def test_index_menu(self):
         """测试首页菜单权限"""
+
         def assertMenuCorrect(perm_name, manage=False, apps=None):
             request = self.rf().get("/admin/")
             request.user = self._create_user(perm_name)
@@ -70,6 +68,7 @@ class PermissionTestCase(WeChatTestCase):
 
     def test_app_menu(self):
         """测试各微信号菜单权限"""
+
         def assertMenuCorrect(perm_name):
             request = self.rf().get("/admin/wechat_django/apps/" + str(self.app.id))
             request.user = self._create_user(perm_name)

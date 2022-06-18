@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from ..models import appmethod, WeChatModel
 from .base import WeChatTestCase
+from ..models import appmethod, WeChatModel
 
 
 class ModelBaseTestCase(WeChatTestCase):
     def test_appmethod(self):
         """测试appmethod"""
+
         class DebugModel(WeChatModel):
             class Meta(object):
                 abstract = True

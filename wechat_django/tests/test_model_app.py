@@ -6,10 +6,9 @@ from django.urls import reverse
 from wechatpy.client import WeChatClient as _Client
 from wechatpy.client.api import WeChatWxa
 
-from ..models import WeChatApp
-from .. import settings
 from .base import mock, WeChatTestCase
 from .interceptors import wechatapi, wechatapi_accesstoken, wechatapi_error
+from .. import settings
 
 
 class AppTestCase(WeChatTestCase):
@@ -91,6 +90,7 @@ class AppTestCase(WeChatTestCase):
 
     def test_build_url(self):
         """测试url构建"""
+
         def assertUrlCorrect(hostname, urlname, request=None, secure=False, kwargs=None):
             kwargs_copy = (kwargs or dict()).copy()
             kwargs_copy["appname"] = self.app.name
@@ -123,7 +123,7 @@ class AppTestCase(WeChatTestCase):
 
         # app中未设置site host 取设置里的site host
         assertUrlCorrect(settings_host, url_name, req, secure=True)
-        
+
         # app中设置取app设置
         self.app.configurations["SITE_HTTPS"] = False
         self.app.configurations["SITE_HOST"] = configure_host

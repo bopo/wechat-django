@@ -4,11 +4,11 @@ from __future__ import unicode_literals
 from django.contrib.sessions.middleware import SessionMiddleware
 from wechatpy.oauth import WeChatOAuthException
 
-from ..models import WeChatApp, WeChatUser
 from wechat_django.oauth import (WeChatAuthenticated, WeChatOAuthClient,
                                  WeChatOAuthSessionAuthentication,
                                  WeChatOAuthView, WeChatSNSScope)
 from .base import mock, WeChatTestCase
+from ..models import WeChatApp, WeChatUser
 
 
 class OAuthAuthenticationTestCase(WeChatTestCase):
@@ -88,8 +88,8 @@ class OAuthAuthenticationTestCase(WeChatTestCase):
         openid = "openid_test_model_auth2"
         nickname = "nickname"
         user_info = dict(openid=openid, nickname=nickname)
-        with mock.patch.object(WeChatOAuthClient, "fetch_access_token"),\
-             mock.patch.object(WeChatOAuthClient, "get_user_info"):
+        with mock.patch.object(WeChatOAuthClient, "fetch_access_token"), \
+                mock.patch.object(WeChatOAuthClient, "get_user_info"):
             WeChatOAuthClient.fetch_access_token.return_value = dict(
                 openid=openid)
             WeChatOAuthClient.get_user_info.return_value = user_info

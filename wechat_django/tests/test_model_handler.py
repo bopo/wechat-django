@@ -2,15 +2,14 @@
 from __future__ import unicode_literals
 
 from datetime import timedelta
-import time
 
 from django.urls import reverse
 from django.utils import timezone
 from wechatpy import messages
 
+from .base import mock, WeChatTestCase
 from ..handler import Handler, message_handler
 from ..models import MessageHandler, Rule, WeChatUser
-from .base import mock, WeChatTestCase
 
 
 @message_handler

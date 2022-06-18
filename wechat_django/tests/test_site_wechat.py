@@ -3,15 +3,16 @@ from __future__ import unicode_literals
 
 from django.http import Http404, response
 
+from .base import mock, WeChatTestCase
 from ..models import WeChatApp
 from ..sites.wechat import WeChatSite, WeChatView, wechat_view
-from .base import mock, WeChatTestCase
 
 
 class WeChatSiteTestCase(WeChatTestCase):
     def test_app_queryset(self):
         """测试app_queryset正确"""
         that = self
+
         class TestSite(WeChatSite):
             @property
             def app_queryset(self):

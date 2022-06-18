@@ -8,9 +8,10 @@ from django.utils.http import urlencode
 from wechatpy.replies import deserialize_reply, TextReply
 from wechatpy.utils import WeChatSigner
 
+from .base import WeChatTestCase
 from .. import settings
 from ..models import MessageHandler, Reply, Rule
-from .base import WeChatTestCase
+
 
 # TODO: 应该拆解成测试各方法会比较直观
 
@@ -141,7 +142,7 @@ class HandlerTestCase(WeChatTestCase):
         if "signature" not in query:
             query["signature"] = self.sign(query)
         return self.client.generic("POST", self.url + "?" + urlencode(query),
-            xml)
+                                   xml)
 
     @property
     def sender(self):

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from .base import WeChatTestCase
 from ..admin.base import WeChatModelAdmin
 from ..models import WeChatUser
 from ..sites.admin import WeChatAdminSite
-from .base import WeChatTestCase
 
 
 class AdminBaseTestCase(WeChatTestCase):
