@@ -13,6 +13,7 @@ class WeChatOAuthAuthentication(BaseAuthentication):
     """
     兼容drf的网页授权认证,仅可通过code授权
     """
+
     def authenticate(self, request):
         wechat = request.wechat
         code = self._get_code(request)

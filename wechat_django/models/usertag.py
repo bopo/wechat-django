@@ -5,8 +5,8 @@ from django.db import models as m, transaction
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
-from ..utils.func import next_chunk
 from . import appmethod, WeChatApp, WeChatModel, WeChatUser
+from ..utils.func import next_chunk
 
 
 class UserTag(WeChatModel):
@@ -27,8 +27,8 @@ class UserTag(WeChatModel):
         verbose_name = _("user tag")
         verbose_name_plural = _("user tags")
 
-        unique_together = (("app", "id"), )
-        index_together = (("app", "name"), )
+        unique_together = (("app", "id"),)
+        index_together = (("app", "name"),)
         ordering = ("app", "id")
 
     @property
@@ -59,7 +59,7 @@ class UserTag(WeChatModel):
                     db_tag = app.user_tags.create(_tag_local=True, **data)
                 else:
                     db_tag = (app.user_tags.filter(id=tag["id"])
-                        .update(name=tag["name"]))
+                              .update(name=tag["name"]))
                 rv.append(db_tag)
             # 存在一个问题
             # 如果先同步了用户 id 101的tag名为a 假设u用户被打了tag a

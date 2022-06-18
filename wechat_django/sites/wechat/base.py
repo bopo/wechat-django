@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from functools import wraps
 
 from django.http import response as django_response
-from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from six import text_type
 
@@ -46,9 +45,9 @@ class WeChatViewMixin(object):
     def as_view(cls, **initKwargs):
         from wechat_django.models import WeChatApp
 
-        initKwargs["app_queryset"] = initKwargs.get("app_queryset")\
-            or cls.app_queryset\
-            or WeChatApp.objects
+        initKwargs["app_queryset"] = initKwargs.get("app_queryset") \
+                                     or cls.app_queryset \
+                                     or WeChatApp.objects
         view = super(WeChatViewMixin, cls).as_view(**initKwargs)
         return csrf_exempt(view)
 
@@ -91,6 +90,7 @@ def wechat_view(regex, name=None, methods=None, bind=False):
         """
         :rtype: wechat_django.sites.wechat.WeChatView
         """
+
         @wraps(func)
         def view(self, request, *args, **kwargs):
             return func(request, *args, **kwargs)

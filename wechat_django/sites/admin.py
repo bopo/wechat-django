@@ -8,14 +8,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.http import response
 from django.urls import NoReverseMatch, resolve, Resolver404, reverse
-from django.utils.translation import gettext_lazy as _
 from object_tool import CustomObjectToolAdminSiteMixin
 from six.moves.urllib.parse import urlparse
 
+from .wechat import default_site as default_wechat_site
 from ..admin.base import registered_admins, WeChatModelAdmin
 from ..models import WeChatApp
 from ..models.permission import get_user_permissions
-from .wechat import default_site as default_wechat_site
 
 
 def wechat_admin_view(view, site):
@@ -23,6 +22,7 @@ def wechat_admin_view(view, site):
     在请求上附上WeChatApp实例
     并在响应的模板上附上app,app_id等context
     """
+
     def correct_url(request, object_id):
         """修正请求url"""
         resolved_url = resolve(request.path_info)

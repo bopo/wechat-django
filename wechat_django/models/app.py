@@ -3,24 +3,24 @@ from __future__ import unicode_literals
 
 import logging
 
+import six
 from django.apps import apps
 from django.db import models as m
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from jsonfield import JSONField
-import six
-from wechatpy.crypto import WeChatCrypto
 from wechatpy.constants import WeChatErrorCode
+from wechatpy.crypto import WeChatCrypto
 from wechatpy.exceptions import WeChatClientException
 
+from . import MsgLogFlag
+from .ability import Abilities
 from .. import settings
+from ..constants import AppType
 from ..exceptions import WeChatAbilityError
 from ..utils.func import Static
 from ..utils.model import enum2choices
-from . import MsgLogFlag
-from .ability import Abilities
-from ..constants import AppType
 
 
 class WeChatAppQuerySet(m.QuerySet):
@@ -47,7 +47,7 @@ class WeChatApp(m.Model):
     class Flag(object):
         UNAUTH = 0x01  # 未认证
 
-    Type = AppType # TODO: deprecated
+    Type = AppType  # TODO: deprecated
 
     title = m.CharField(
         _("title"), max_length=16, null=False,
@@ -60,7 +60,7 @@ class WeChatApp(m.Model):
     appid = m.CharField(_("AppId"), max_length=32, null=False)
     appsecret = m.CharField(_("AppSecret"), max_length=64, blank=True, null=True)
     type = m.PositiveSmallIntegerField(_("type"), default=Type.SERVICEAPP,
-        choices=enum2choices(Type))
+                                       choices=enum2choices(Type))
 
     token = m.CharField(max_length=32, null=True, blank=True)
     encoding_aes_key = m.CharField(

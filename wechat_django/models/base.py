@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 from functools import update_wrapper, wraps
 
+import six
 from django.db import models as m
 from django.utils.encoding import force_bytes
-import six
 
 from . import WeChatApp
 

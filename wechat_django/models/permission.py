@@ -10,8 +10,8 @@
 
 from __future__ import unicode_literals
 
-from collections import defaultdict
 import re
+from collections import defaultdict
 
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
@@ -96,7 +96,7 @@ def get_perm_names(app, permissions):
 
 def get_perm_desc(perm_name, app):
     appname, permission = match_permission(perm_name)
-    desc = permissions[permission] if permission\
+    desc = permissions[permission] if permission \
         else _("Can full control %(appname)s")
     return "{0} | {1}".format(appname, desc) % dict(appname=app.name)
 
@@ -105,7 +105,7 @@ def get_require_perm_names(appname, permission=None):
     """获取依赖的django权限"""
     rv = set()
     perms = (permission_required.get(permission, []) if permission
-        else permission_required.keys())
+             else permission_required.keys())
     for perm in perms:
         if perm.find(".") >= 0:
             rv.add(perm)
@@ -129,9 +129,9 @@ def get_perm_model(perm_name):
 
 def get_perms_by_codenames(codenames):
     return (Permission.objects
-        .filter(content_type__app_label__startswith="wechat_django")
-        .filter(codename__in=codenames)
-        .all())
+            .filter(content_type__app_label__startswith="wechat_django")
+            .filter(codename__in=codenames)
+            .all())
 
 
 @receiver(m.signals.post_save, sender=WeChatApp)

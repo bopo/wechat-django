@@ -3,17 +3,17 @@ from __future__ import unicode_literals
 
 from copy import deepcopy
 
+import requests
 from django.db import models as m
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 from jsonfield import JSONField
-import requests
 from six import text_type
 from wechatpy import replies
 
+from . import MessageHandler, MsgType as BaseMsgType, WeChatModel
 from ..exceptions import MessageHandleError
 from ..utils.model import enum2choices, model_fields
-from . import Material, MessageHandler, MsgType as BaseMsgType, WeChatModel
 
 
 class Reply(WeChatModel):
@@ -109,7 +109,7 @@ class Reply(WeChatModel):
                 e = "handler must be decorated by wechat_django.handler.message_handler"
                 raise MessageHandleError(e)
             elif (hasattr(func.message_handler, "__contains__")
-                and appname not in func.message_handler):
+                  and appname not in func.message_handler):
                 e = "this handler cannot assigned to {0}".format(appname)
                 raise MessageHandleError(e)
             reply = func(message_info)

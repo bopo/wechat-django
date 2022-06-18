@@ -3,20 +3,18 @@ from __future__ import unicode_literals
 
 from functools import wraps
 
+import six
 from django.http.response import HttpResponse
 from django.shortcuts import redirect
-import six
 from wechatpy import WeChatOAuthException
 
 from wechat_django.constants import WeChatSNSScope
 from wechat_django.rest_framework.views import APIView
-
 from .mixins import WeChatOAuthViewMixin
 from .permissions import WeChatAuthenticated
 
 
 class WeChatOAuthView(WeChatOAuthViewMixin, APIView):
-
     required = True
     """真值必须授权 否则不授权亦可继续访问(只检查session)"""
 
@@ -38,20 +36,20 @@ class WeChatOAuthView(WeChatOAuthViewMixin, APIView):
     def prepare_init_kwargs(cls, **initKwargs):
         # 检查属性正确性
         appname = initKwargs.get("appname") or cls.appname
-        assert appname and isinstance(appname, six.text_type),\
+        assert appname and isinstance(appname, six.text_type), \
             "incorrect appname"
 
         response = initKwargs.get("response") or cls.response
         assert (
-            response is None or callable(response)
-            or isinstance(response, HttpResponse)
+                response is None or callable(response)
+                or isinstance(response, HttpResponse)
         ), "incorrect response param"
 
         scope = initKwargs.get("scope") or cls.scope
         if isinstance(scope, six.text_type):
             scope = (scope,)
         for s in scope:
-            assert s in (WeChatSNSScope.BASE, WeChatSNSScope.USERINFO),\
+            assert s in (WeChatSNSScope.BASE, WeChatSNSScope.USERINFO), \
                 "incorrect scope"
 
         # 对于必须授权的请求 在permissions中添加WeChatAuthenticated
@@ -169,4 +167,5 @@ def wechat_auth(appname, scope=None, redirect_uri=None, required=True,
         return View.as_view(appname=appname, scope=scope,
                             redirect_uri=redirect_uri, required=required,
                             response=response, state=state)
+
     return decorator

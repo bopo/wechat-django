@@ -8,8 +8,7 @@ SITE_HTTPS = getattr(settings, "WECHAT_SITE_HTTPS", True)
 
 PATCHADMINSITE = getattr(settings, "WECHAT_PATCHADMINSITE", True)
 
-SESSIONSTORAGE = getattr(
-    settings, "WECHAT_SESSIONSTORAGE", "django.core.cache.cache")
+SESSIONSTORAGE = getattr(settings, "WECHAT_SESSIONSTORAGE", "django.core.cache.cache")
 
 MESSAGETIMEOFFSET = getattr(settings, "WECHAT_MESSAGETIMEOFFSET", 180)
 

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import object_tool
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-import object_tool
 
-from ...models import Article
-from ..utils import anchor
 from ..base import WeChatModelAdmin
+from ..utils import anchor
+from ...models import Article
 
 
 class ArticleAdmin(WeChatModelAdmin):
@@ -17,24 +17,25 @@ class ArticleAdmin(WeChatModelAdmin):
 
     changelist_object_tools = ("sync",)
     list_display = ("title", "author", "material_link", "index", "digest",
-        "link", "source_url", "synced_at")
+                    "link", "source_url", "synced_at")
     list_editable = ("index",)
     search_fields = ("title", "author", "digest", "content_source_url", "content")
 
     fields = ("title", "author", "digest", "thumb_image", "thumb_media_id",
-        "link", "show_cover_pic", "_content", "content_source_url", "source_url")
+              "link", "show_cover_pic", "_content", "content_source_url", "source_url")
     readonly_fields = fields
 
     link = anchor(_("link"), lambda self, obj: obj.url)
     link.short_description = _("link")
 
     source_url = anchor(_("source_url"),
-        lambda self, obj: obj.content_source_url)
+                        lambda self, obj: obj.content_source_url)
     source_url.short_description = _("source_url")
 
     @mark_safe
     def thumb_image(self, obj):
         return obj.thumb_url and '<a href="{0}"><img width="200" src="{0}" /></a>'.format(obj.thumb_url)
+
     thumb_image.short_description = _("thumb_url")
 
     @mark_safe
@@ -54,11 +55,13 @@ class ArticleAdmin(WeChatModelAdmin):
                     media_id=m.media_id
                 ) if m.comment else m.media_id
             )
+
     material_link.short_description = _("material")
 
     @mark_safe
     def _content(self, obj):
         return obj.content
+
     _content.short_description = _("content")
 
     def get_queryset(self, request):
@@ -79,7 +82,7 @@ class ArticleAdmin(WeChatModelAdmin):
             materials = request.app.sync_articles()
             msg = _("%(count)d articles successfully synchronized")
             return msg % dict(count=len(materials))
-        
+
         return self._clientaction(
             request, action, _("Sync articles failed with %(exc)s"))
 

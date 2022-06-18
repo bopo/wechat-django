@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 from django.db import models as m, transaction
 from django.utils.translation import gettext_lazy as _
 
+from . import appmethod, WeChatApp, WeChatModel
 from ..exceptions import WeChatAbilityError
 from ..utils.model import model_fields
-from . import appmethod, WeChatApp, WeChatModel
 
 
 class Template(WeChatModel):
@@ -52,8 +52,8 @@ class Template(WeChatModel):
 
         with transaction.atomic():
             (app.templates
-                .exclude(template_id__in=[t["template_id"] for t in templates])
-                .delete())
+             .exclude(template_id__in=[t["template_id"] for t in templates])
+             .delete())
             rv = []
             for t in templates:
                 defaults = dict(app=app)
@@ -67,8 +67,8 @@ class Template(WeChatModel):
             return rv
 
     def send(
-        self, user, data=None, url=None, appid=None, pagepath=None, page=None,
-        form_id=None, emphasis_keyword=None, **kwargs):
+            self, user, data=None, url=None, appid=None, pagepath=None, page=None,
+            form_id=None, emphasis_keyword=None, **kwargs):
         """
         发送模板消息
         :param user: 用户openid或用户对象
@@ -101,7 +101,7 @@ class Template(WeChatModel):
             raise WeChatAbilityError(WeChatAbilityError.TEMPLATE)
 
     def _send_service(
-        self, openid, data, url=None, appid=None, pagepath=None):
+            self, openid, data, url=None, appid=None, pagepath=None):
         """发送服务号模板消息"""
         miniprogram = dict(
             appid=appid,
@@ -111,7 +111,7 @@ class Template(WeChatModel):
             openid, self.template_id, data, url=url, mini_program=miniprogram)
 
     def _send_miniprogram(
-        self, openid, data, form_id, page=None, emphasis_keyword=None):
+            self, openid, data, form_id, page=None, emphasis_keyword=None):
         """发送小程序模板消息"""
         return self.app.client.send_template_message(
             openid, self.template_id, data, form_id, page=page,

@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.contrib import messages
+import object_tool
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-import object_tool
-from wechatpy.exceptions import WeChatClientException
 
+from ..base import RecursiveDeleteActionMixin, WeChatModelAdmin
+from ..utils import field_property
 from ...constants import AppType
 from ...models import UserTag
-from ..utils import field_property
-from ..base import RecursiveDeleteActionMixin, WeChatModelAdmin
 
 
 class UserTagAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
@@ -21,8 +19,8 @@ class UserTagAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
 
     actions = ("sync_users", "sync_openids")
     changelist_object_tools = ("sync",)
-    list_display = ("id",  "name", "sys_tag", "count", "created_at")
-    search_fields = ("name", )
+    list_display = ("id", "name", "sys_tag", "count", "created_at")
+    search_fields = ("name",)
 
     fields = list_display
     readonly_fields = ("id", "count", "sys_tag")
@@ -32,6 +30,7 @@ class UserTagAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
     @object_tool.confirm(short_description=_("Sync user tags"))
     def sync(self, request, obj=None):
         self.check_wechat_permission(request, "sync")
+
         def action():
             tags = UserTag.sync(request.app)
             msg = _("%(count)d tags successfully synchronized")
@@ -42,15 +41,17 @@ class UserTagAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
 
     def sync_users(self, request, queryset, detail=True):
         self.check_wechat_permission(request, "sync", "user")
+
         def action():
             tags = queryset.all()
             for tag in tags:
                 users = tag.sync_users(detail)
                 msg = _("%(count)d users of %(tag)s successfully synchronized")
                 return msg % dict(count=len(users), tag=tag.name)
-        
+
         return self._clientaction(
             request, action, _("Sync users failed with %(exc)s"))
+
     sync_users.short_description = _("sync tag users")
 
     sync_openids = lambda self, request, queryset: self.sync_users(
@@ -71,6 +72,7 @@ class UserTagAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
             ),
             count=obj.users.count()
         )
+
     count.short_description = _("users count")
 
     def get_fields(self, request, obj=None):
@@ -93,9 +95,9 @@ class UserTagAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
         return rv
 
     def has_add_permission(self, request):
-        return super(UserTagAdmin, self).has_add_permission(request)\
-            and self.get_queryset(request).exclude(
-                id__in=UserTag.SYS_TAGS).count() < 100
+        return super(UserTagAdmin, self).has_add_permission(request) \
+               and self.get_queryset(request).exclude(
+            id__in=UserTag.SYS_TAGS).count() < 100
 
     def get_model_perms(self, request):
         if request.app.type not in (AppType.SERVICEAPP, AppType.SUBSCRIBEAPP):

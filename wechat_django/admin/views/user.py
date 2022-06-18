@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import object_tool
 from django import forms
 from django.contrib import admin
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-import object_tool
 
-from ...models import UserTag, WeChatUser
 from ..base import WeChatModelAdmin
+from ...models import UserTag, WeChatUser
 
 
 class UserForm(forms.ModelForm):
@@ -52,16 +52,19 @@ class WeChatUserAdmin(WeChatModelAdmin):
     @mark_safe
     def avatar(self, obj):
         return obj.headimgurl and '<img src="{0}" />'.format(obj.avatar(46))
+
     avatar.short_description = _("avatar")
     avatar.allow_tags = True
 
     def subscribetime(self, obj):
         return obj.subscribe_time and timezone.datetime.fromtimestamp(obj.subscribe_time)
+
     subscribetime.short_description = _("subscribe time")
 
     def sync(self, request, obj=None, method="sync", kwargs=None):
         self.check_wechat_permission(request, "sync")
         kwargs = kwargs or dict()
+
         # 可能抛出48001 没有api权限
         def action():
             users = getattr(WeChatUser, method)(request.app, **kwargs)
@@ -110,8 +113,8 @@ class WeChatUserAdmin(WeChatModelAdmin):
         tags_field = form.declared_fields["tags"]
 
         tags_field.queryset = (tags_field.queryset
-            .filter(app=app)
-            .exclude(id__in=UserTag.SYS_TAGS))
+                               .filter(app=app)
+                               .exclude(id__in=UserTag.SYS_TAGS))
         return form
 
     def get_readonly_fields(self, request, obj=None):

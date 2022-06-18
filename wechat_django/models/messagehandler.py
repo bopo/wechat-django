@@ -9,10 +9,10 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from wechatpy.exceptions import WeChatClientException
 
+from . import appmethod, MsgLogFlag, WeChatApp, WeChatModel
 from ..exceptions import MessageHandleError
 from ..utils.model import enum2choices
 from ..utils.web import get_ip
-from . import appmethod, MsgLogFlag, WeChatApp, WeChatModel
 
 
 class MessageHandlerManager(m.Manager):
@@ -35,7 +35,7 @@ class MessageHandler(WeChatModel):
         SELF = 0  # 自己的后台
         MENU = 1  # 菜单
         MP = 2  # 微信后台
-        MIGRATE = 3 # 迁移来的
+        MIGRATE = 3  # 迁移来的
 
     class ReplyStrategy(object):
         REPLYALL = "reply_all"
@@ -63,7 +63,7 @@ class MessageHandler(WeChatModel):
         (Source.MENU, "menu")
     ), default=Source.SELF, editable=False)
     strategy = m.CharField(_("strategy"), max_length=10,
-        choices=enum2choices(ReplyStrategy), default=ReplyStrategy.REPLYALL)
+                           choices=enum2choices(ReplyStrategy), default=ReplyStrategy.REPLYALL)
 
     flags = m.IntegerField(_("flags"), default=False)
 
@@ -106,11 +106,11 @@ class MessageHandler(WeChatModel):
         """
         :type message_info: wechat_django.models.WeChatMessageInfo
         """
-        handlers = message_info.app.message_handlers\
+        handlers = message_info.app.message_handlers \
             .prefetch_related("rules").all()
         for handler in handlers:
             if handler.is_match(message_info):
-                return (handler, )
+                return (handler,)
 
     def is_match(self, message_info):
         if self.available:
@@ -138,8 +138,8 @@ class MessageHandler(WeChatModel):
                         # 发送异常 继续处理其他程序
                         log = self.handlerlog(message_info.request)
                         msg = "an unexcepted error occurred when send msg"
-                        level = logging.WARNING\
-                            if isinstance(e, WeChatClientException)\
+                        level = logging.WARNING \
+                            if isinstance(e, WeChatClientException) \
                             else logging.ERROR
                         log(level, msg, exc_info=True)
                 reply = replies[-1]

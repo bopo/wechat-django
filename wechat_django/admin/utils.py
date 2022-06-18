@@ -10,6 +10,7 @@ from six.moves.urllib.parse import parse_qsl
 
 def anchor(text, href, **kwargs):
     """转化为a标签"""
+
     @mark_safe
     def wrapper(modeladmin, obj):
         kwargs.update(
@@ -20,6 +21,7 @@ def anchor(text, href, **kwargs):
             if callable(value):
                 kwargs[key] = value(modeladmin, obj)
         return kwargs["text"] and '<a href="{href}">{text}</a>'.format(**kwargs)
+
     return wrapper
 
 
@@ -30,6 +32,7 @@ def foreignkey(field_name):
     If field_name is 'parent', link text will be str(obj.parent)
     Link will be admin url for the admin url for obj.parent.id:change
     """
+
     @mark_safe
     def _linkify(obj):
         app_label = obj._meta.app_label
@@ -81,6 +84,6 @@ def get_request_params(request, param):
         else:
             preserved_filters = dict()
         value = (request.GET.get(param)
-            or preserved_filters.get(param))
+                 or preserved_filters.get(param))
         setattr(request, param, value)
     return getattr(request, param)

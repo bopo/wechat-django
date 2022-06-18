@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from hashlib import md5
 import json
+from hashlib import md5
 
 from django.db import models as m, transaction
 from django.utils.translation import gettext_lazy as _
 from jsonfield import JSONField
 
-from ..utils.model import enum2choices
 from . import appmethod, MessageHandler, WeChatApp, WeChatModel
+from ..utils.model import enum2choices
 
 
 class MenuManager(m.Manager):
     def get_queryset(self):
         return (super(MenuManager, self).get_queryset()
-            .prefetch_related("sub_button"))
+                .prefetch_related("sub_button"))
 
 
 class Menu(WeChatModel):
@@ -125,7 +125,7 @@ class Menu(WeChatModel):
                 (data.get("sub_button") or dict(list=[])).get("list")
             ])
         elif menu.type in (
-            cls.Event.VIEW, cls.Event.CLICK, cls.Event.MINIPROGRAM):
+                cls.Event.VIEW, cls.Event.CLICK, cls.Event.MINIPROGRAM):
             menu.content = data
         else:
             # 要当作回复处理了
@@ -142,7 +142,7 @@ class Menu(WeChatModel):
         if self.type:
             rv["type"] = self.type
             if self.type in (Menu.Event.CLICK, Menu.Event.VIEW,
-                Menu.Event.MINIPROGRAM):
+                             Menu.Event.MINIPROGRAM):
                 rv.update(self.content)
             else:
                 raise ValueError("incorrect menu type")

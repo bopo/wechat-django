@@ -4,20 +4,20 @@
 
 from __future__ import unicode_literals
 
-from contextlib import contextmanager
-from functools import wraps
 import logging
 import time
+from contextlib import contextmanager
+from functools import wraps
 
+import six
+import xmltodict
 from django.core.cache import cache
 from django.http import response
 from django.utils.datastructures import MultiValueDictKeyError
-import six
 from wechatpy import parse_message, replies
 from wechatpy.events import BaseEvent
 from wechatpy.exceptions import InvalidSignatureException
 from wechatpy.utils import check_signature
-import xmltodict
 
 from . import settings, signals
 from .exceptions import BadMessageRequest, MessageHandleError
@@ -248,6 +248,7 @@ def _decorator(property, names_or_func):
         @wraps(view_func)
         def decorated_view(message):
             return view_func(message)
+
         setattr(decorated_view, property, names or True)
 
         return decorated_view

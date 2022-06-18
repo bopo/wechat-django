@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.utils.translation import gettext_lazy as _
 import object_tool
+from django.utils.translation import gettext_lazy as _
 
-from ...models import Template
 from ..base import WeChatModelAdmin
+from ...models import Template
 
 
 class TemplateAdmin(WeChatModelAdmin):
@@ -37,6 +37,7 @@ class TemplateAdmin(WeChatModelAdmin):
 
         return self._clientaction(
             request, action, _("Sync templates failed with %(exc)s"))
+
     sync.short_description = _("sync templates")
 
     def has_add_permission(self, request):

@@ -13,6 +13,7 @@ def ability(func):
     @wraps(func)
     def decorated_func(self):
         return bool(func(self))
+
     return property(decorated_func)
 
 
@@ -25,7 +26,9 @@ def apptypes(*args, **kwargs):
             else:
                 rv = self.app.type in args
             return rv and func(self)
+
         return decorated_func
+
     return decorator
 
 

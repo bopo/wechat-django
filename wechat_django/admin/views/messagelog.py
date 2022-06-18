@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
-
-from ...models import MessageLog
-from ..utils import foreignkey
 from ..base import WeChatModelAdmin
+from ..utils import foreignkey
+from ...models import MessageLog
 
 
 class MessageLogAdmin(WeChatModelAdmin):
@@ -15,7 +12,7 @@ class MessageLogAdmin(WeChatModelAdmin):
 
     list_display = (
         "msg_id", foreignkey("user"), "type", "content", "created_at")
-    list_filter = ("type", )
+    list_filter = ("type",)
     search_fields = (
         "=user__openid", "=user__unionid", "user__nickname", "user__comment",
         "content")

@@ -7,8 +7,8 @@ from django.utils.translation import gettext_lazy as _
 from jsonfield import JSONField
 from wechatpy.events import BaseEvent
 
-from ..utils.model import enum2choices
 from . import Rule, WeChatApp, WeChatModel, WeChatUser
+from ..utils.model import enum2choices
 
 
 class MessageLog(WeChatModel):

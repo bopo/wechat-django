@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import object_tool
 from django import forms
-from django.contrib import messages
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-import object_tool
-from wechatpy.exceptions import WeChatClientException
 
-from ...models import Menu
-from ..utils import get_request_params
 from ..base import DynamicChoiceForm, WeChatModelAdmin
+from ..utils import get_request_params
+from ...models import Menu
 
 
 class MenuAdmin(WeChatModelAdmin):
@@ -27,7 +25,7 @@ class MenuAdmin(WeChatModelAdmin):
         "operates", "id", "parent_id", "title", "type", "detail", "weight",
         "updated_at")
     list_display_links = ("title",)
-    list_editable = ("weight", )
+    list_editable = ("weight",)
     fields = (
         "name", "type", "key", "url", "appid", "pagepath", "created_at",
         "updated_at")
@@ -36,6 +34,7 @@ class MenuAdmin(WeChatModelAdmin):
         if obj.parent:
             return "|--- " + obj.name
         return obj.name
+
     title.short_description = _("title")
 
     @mark_safe
@@ -49,6 +48,7 @@ class MenuAdmin(WeChatModelAdmin):
         elif obj.type == Menu.Event.MINIPROGRAM:
             rv = obj.content.get("appid")
         return rv or ""
+
     detail.short_description = _("detail")
 
     @mark_safe
@@ -66,6 +66,7 @@ class MenuAdmin(WeChatModelAdmin):
             add_url = "{0}?{1}".format(add_link, urlencode(query))
             rv += '<a class="addlink" href="{0}"></a>'.format(add_url)
         return rv
+
     operates.short_description = _("actions")
 
     @object_tool.confirm(short_description=_("Sync menus"))
@@ -133,14 +134,15 @@ class MenuAdmin(WeChatModelAdmin):
 
         def allowed_fields(self, type, cleaned_data):
             if type == Menu.Event.VIEW:
-                fields = ("url", )
+                fields = ("url",)
             elif type == Menu.Event.CLICK:
-                fields = ("key", )
+                fields = ("key",)
             elif type == Menu.Event.MINIPROGRAM:
                 fields = ("url", "appid", "apppath")
             else:
                 fields = tuple()
             return fields
+
     form = MenuForm
 
     def save_model(self, request, obj, form, change):

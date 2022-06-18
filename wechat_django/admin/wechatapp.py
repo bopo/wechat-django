@@ -8,9 +8,9 @@ from django.template.defaultfilters import truncatechars
 from django.utils.html import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from .base import has_wechat_permission
 from ..models import MsgLogFlag, WeChatApp
 from ..models.permission import get_user_permissions
-from .base import has_wechat_permission
 
 
 class WeChatAppForm(forms.ModelForm):
@@ -63,13 +63,13 @@ class WeChatAppForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.flags = self.cleaned_data["flags"]
-        self.instance.configurations["SITE_HOST"] =\
+        self.instance.configurations["SITE_HOST"] = \
             self.cleaned_data.get("wechat_host", "")
-        self.instance.configurations["SITE_HTTPS"] =\
+        self.instance.configurations["SITE_HTTPS"] = \
             self.cleaned_data.get("wechat_https", None)
-        self.instance.configurations["ACCESSTOKEN_URL"] =\
+        self.instance.configurations["ACCESSTOKEN_URL"] = \
             self.cleaned_data.get("accesstoken_url", "")
-        self.instance.configurations["OAUTH_URL"] =\
+        self.instance.configurations["OAUTH_URL"] = \
             self.cleaned_data.get("oauth_url", "")
         return super(WeChatAppForm, self).save(commit)
 
@@ -117,15 +117,18 @@ class WeChatAppAdmin(admin.ModelAdmin):
         style_str = ";".join(["{0}: {1}".format(*o) for o in styles.items()])
         tpl = '<span style="{0}">{1}</span>'
         return "".join(map(lambda o: tpl.format(style_str, o), abilities))
+
     abilities.short_description = _("abilities")
 
     def short_desc(self, obj):
         return truncatechars(obj.desc, 35)
+
     short_desc.short_description = _("description")
 
     def callback(self, obj):
         return obj and obj.build_url(
             "handler", request=self.request, absolute=True)
+
     callback.short_description = _("message callback url")
 
     def delete_view(self, request, object_id, *args, **kwargs):
@@ -193,12 +196,12 @@ class WeChatAppAdmin(admin.ModelAdmin):
 
     def get_model_perms(self, request):
         return ({} if getattr(request, "app_id", None)
-            else super(WeChatAppAdmin, self).get_model_perms(request))
+                else super(WeChatAppAdmin, self).get_model_perms(request))
 
     def get_deleted_objects(self, objs, request):
         from ..models import WeChatUser
         from ..pay.models import UnifiedOrder
-        deleted_objects, model_count, perms_needed, protected =\
+        deleted_objects, model_count, perms_needed, protected = \
             super(WeChatAppAdmin, self).get_deleted_objects(objs, request)
         ignored_models = (
             WeChatUser._meta.verbose_name, UnifiedOrder._meta.verbose_name)

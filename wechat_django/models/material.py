@@ -5,14 +5,14 @@ import mimetypes
 import re
 import uuid
 
+import requests
 from django.db import models as m, transaction
 from django.utils.translation import gettext_lazy as _
-import requests
 from wechatpy.constants import WeChatErrorCode
 from wechatpy.exceptions import WeChatClientException
 
-from ..utils.model import enum2choices, model_fields
 from . import appmethod, WeChatApp, WeChatModel
+from ..utils.model import enum2choices, model_fields
 
 
 class MaterialManager(m.Manager):
@@ -132,8 +132,8 @@ class Material(WeChatModel):
         updates = app.get_materials(type)
         # 删除被删除的 更新或新增获取的
         (app.materials.filter(type=type)
-            .exclude(media_id__in=map(lambda o: o["media_id"], updates))
-            .delete())
+         .exclude(media_id__in=map(lambda o: o["media_id"], updates))
+         .delete())
         return [
             app.materials.create_material(type=type, **item)
             for item in updates]
@@ -305,5 +305,5 @@ class Material(WeChatModel):
     def __str__(self):
         media = "{type}:{media_id}".format(type=self.type,
                                            media_id=self.media_id)
-        return "{0} ({1})".format(self.comment, media)\
+        return "{0} ({1})".format(self.comment, media) \
             if self.comment else media

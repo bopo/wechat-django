@@ -8,8 +8,8 @@ from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 from jsonfield import JSONField
 
-from ..utils.model import enum2choices, model_fields
 from . import MessageHandler, MsgType, WeChatModel
+from ..utils.model import enum2choices, model_fields
 
 
 class Rule(WeChatModel):
@@ -98,21 +98,21 @@ class Rule(WeChatModel):
             return message.type == self.content["msg_type"]
         elif self.type == self.Type.EVENT:
             return (message.type == self.ReceiveMsgType.EVENT
-                and self._event_match(message))
+                    and self._event_match(message))
         elif self.type == self.Type.EVENTKEY:
             return (message.type == self.ReceiveMsgType.EVENT
-                and self._event_match(message)
-                and hasattr(message, "key")
-                and message.key == self.content["key"])
+                    and self._event_match(message)
+                    and hasattr(message, "key")
+                    and message.key == self.content["key"])
         elif self.type == self.Type.CONTAIN:
             return (message.type == self.ReceiveMsgType.TEXT
-                and self.content["pattern"] in message.content)
+                    and self.content["pattern"] in message.content)
         elif self.type == self.Type.EQUAL:
             return (message.type == self.ReceiveMsgType.TEXT
-                and message.content == self.content["pattern"])
+                    and message.content == self.content["pattern"])
         elif self.type == self.Type.REGEX:
             return (message.type == self.ReceiveMsgType.TEXT
-                and re.search(self.content["pattern"], message.content))
+                    and re.search(self.content["pattern"], message.content))
         return False
 
     def _event_match(self, message):

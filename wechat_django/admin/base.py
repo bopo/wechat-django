@@ -2,26 +2,26 @@
 from __future__ import unicode_literals
 
 import django
+import six
 from django import forms
 from django.contrib import messages
 from django.contrib.admin.actions import delete_selected
 from django.contrib.admin.views.main import ChangeList
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from object_tool import CustomObjectToolModelAdmin
-import six
 from wechatpy.exceptions import WeChatClientException
 
 from ..models.permission import get_user_permissions
-
 
 registered_admins = []
 
 
 class RecursiveDeleteActionMixin(object):
     """逐一删除混合类"""
+
     def get_actions(self, request):
         actions = super(RecursiveDeleteActionMixin, self).get_actions(request)
         if "delete_selected" in actions:
@@ -55,6 +55,7 @@ class RecursiveDeleteActionMixin(object):
                     )
                     request.app.logger("admin").warning(msg, exc_info=True)
                     raise
+
     delete_selected.short_description = _("delete selected")
 
 
@@ -106,7 +107,7 @@ class WeChatModelAdmin(six.with_metaclass(WeChatModelAdminMetaClass,
     change_list_template = "admin/wechat_django/change_list.html"
     objecttool_form_template = "admin/wechat_django/objecttool_form.html"
 
-    #region view
+    # region view
     def get_changelist(self, request):
         return WeChatChangeList
 
@@ -133,21 +134,23 @@ class WeChatModelAdmin(six.with_metaclass(WeChatModelAdminMetaClass,
             else:
                 request.app.logger("admin").error(msg, exc_info=True)
             self.message_user(request, msg, level=messages.ERROR)
-    #endregion
 
-    #region model
+    # endregion
+
+    # region model
     def get_queryset(self, request):
         return (super(WeChatModelAdmin, self)
-            .get_queryset(request).filter(app_id=request.app_id))
+                .get_queryset(request).filter(app_id=request.app_id))
 
     def save_model(self, request, obj, form, change):
         if not change:
             obj.app_id = request.app_id
         return super(WeChatModelAdmin, self).save_model(
             request, obj, form, change)
-    #endregion
 
-    #region permissions
+    # endregion
+
+    # region permissions
     def check_wechat_permission(self, request, operate="", category="", obj=None):
         if not self.has_wechat_permission(request, operate, category, obj):
             raise PermissionDenied
@@ -173,7 +176,7 @@ class WeChatModelAdmin(six.with_metaclass(WeChatModelAdminMetaClass,
         if not hasattr(request, "app"):
             return False
         return bool(get_user_permissions(request.user, request.app))
-    #endregion
+    # endregion
 
 
 class DynamicChoiceForm(forms.ModelForm):
@@ -211,7 +214,7 @@ class DynamicChoiceForm(forms.ModelForm):
     def save(self, commit=True, *args, **kwargs):
         model = super(DynamicChoiceForm, self).save(False, *args, **kwargs)
         setattr(model, self.content_field,
-            self.cleaned_data[self.content_field])
+                self.cleaned_data[self.content_field])
         if commit:
             model.save()
         return model

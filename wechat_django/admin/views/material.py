@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import object_tool
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlencode
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-import object_tool
 
-from ...models import Material
 from ..base import RecursiveDeleteActionMixin, WeChatModelAdmin
+from ...models import Material
 
 
 class MaterialAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
     __category__ = "material"
     __model__ = Material
 
-    changelist_object_tools = ("sync", )
+    changelist_object_tools = ("sync",)
     list_display = ("media_id", "alias", "type", "comment", "updatetime")
-    list_filter = ("type", )
+    list_filter = ("type",)
     search_fields = ("name", "media_id", "comment")
 
     fields = ("type", "media_id", "alias", "name", "open", "comment")
@@ -28,11 +28,13 @@ class MaterialAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
     def preview(self, obj):
         if obj.type == Material.Type.IMAGE:
             return '<img src="%s" />' % obj.url
+
     preview.short_description = _("preview")
 
     def updatetime(self, obj):
         return (obj.update_time
-            and timezone.datetime.fromtimestamp(obj.update_time))
+                and timezone.datetime.fromtimestamp(obj.update_time))
+
     updatetime.short_description = _("update time")
 
     @mark_safe
@@ -58,6 +60,7 @@ class MaterialAdmin(RecursiveDeleteActionMixin, WeChatModelAdmin):
         return '<a href="{0}" {1}>{2}</a>'.format(
             url, 'target="_blank"' if blank else "", _("open")
         )
+
     open.short_description = _("open")
 
     @object_tool.confirm(short_description=_("Sync materials"))
